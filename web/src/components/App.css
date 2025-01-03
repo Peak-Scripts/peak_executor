@@ -1,0 +1,14 @@
+.nui-wrapper {
+  text-align: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+pre {
+  counter-reset:line-numbering;
+  padding:12px 0px 14px 0;
+  line-height:140%;
+  margin: 0;
+}
