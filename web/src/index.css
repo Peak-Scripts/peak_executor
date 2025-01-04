@@ -18,6 +18,16 @@ body {
   height: 100vh;
   background: none !important;
   color: white;
+  user-select: none;
+}
+
+.nui-wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none !important;
 }
 
 #root {
@@ -28,6 +38,7 @@ body {
 
 #root.visible {
   display: block;
+  background: none !important;
 }
 
 code {

@@ -3,13 +3,11 @@ import "./App.css";
 import { fetchNui } from "../utils/fetchNui";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { CodeOutput } from "./CodeOutput";
 import { debugData } from "../utils/debugData";
-import Editor from 'react-simple-code-editor';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-lua';
+import Editor from "@monaco-editor/react";
 import { useVisibility } from "../providers/VisibilityProvider";
+import { Terminal, Play } from "lucide-react";
 
 debugData([
   {
@@ -87,10 +85,17 @@ const App: React.FC = () => {
   if (!visible) return null;
 
   return (
-    <div className="nui-wrapper">
+    <div style={{ background: 'none' }} className="nui-wrapper flex items-center justify-center">
       <Card className="w-[900px] h-[650px] rounded-xl border-zinc-700 bg-zinc-900">
-        <CardHeader className="bg-zinc-800 rounded-lg border-b border-zinc-700">
-          <CardTitle className="text-white">Code Executor</CardTitle>
+        <CardHeader className="bg-zinc-800 rounded-t-xl border-b border-zinc-700/50 px-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-1.5 rounded-lg bg-zinc-900">
+                <Terminal className="w-5 h-5 text-zinc-400" />
+              </div>
+              <CardTitle className="text-zinc-100 tracking-tight">Code Executor</CardTitle>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="p-6 flex flex-col flex-1 h-[calc(100%-80px)] rounded-lg">
           <div className="flex flex-col gap-4 h-full">
@@ -98,39 +103,49 @@ const App: React.FC = () => {
               <Button 
                 variant="secondary" 
                 onClick={executeCode}
-                className="rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white border-zinc-700"
+                className="rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border-zinc-700/50 px-6 
+                         transition-all duration-200 hover:shadow-lg hover:border-zinc-600 flex items-center gap-2"
               >
+                <Play className="w-4 h-4" />
                 Execute
               </Button>
             </div>
             
             <div className="relative flex-1">
-              <ScrollArea className="absolute inset-0 rounded-lg border border-zinc-700">
-                <div className="h-[395px] overflow-x-auto bg-zinc-800">
-                  <Editor
-                    value={codeState.code}
-                    onValueChange={code => setCodeState(prev => ({ ...prev, code }))}
-                    highlight={code => Prism.highlight(code, Prism.languages.lua, 'lua')}
-                    padding={16}
-                    style={{
-                      fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-                      fontSize: '14px',
-                      color: '#fff',
-                      whiteSpace: 'pre',
-                      minWidth: '100%'
-                    }}
-                    textareaClassName="focus:outline-none"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Backspace') {
-                        e.stopPropagation();
-                      }
-                    }}
-                  />
-                </div>
-              </ScrollArea>
+              <div className="absolute inset-0 rounded-xl border border-zinc-700/50 bg-zinc-800 overflow-hidden">
+                <Editor
+                  className="rounded-xl"
+                  height="330px"
+                  defaultLanguage="lua"
+                  theme="vs-dark"
+                  value={codeState.code}
+                  onChange={(value) => setCodeState(prev => ({ ...prev, code: value || "" }))}
+                  options={{
+                    minimap: { enabled: false },
+                    fontSize: 14,
+                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true,
+                    lineNumbersMinChars: 4,
+                    padding: { top: 8, bottom: 8 },
+                    lineDecorationsWidth: 10,
+                    scrollbar: {
+                      vertical: 'visible',
+                      horizontal: 'visible',
+                      verticalScrollbarSize: 8,
+                      horizontalScrollbarSize: 8,
+                      useShadows: false
+                    },
+                    overviewRulerLanes: 0,
+                    overviewRulerBorder: false,
+                    glyphMargin: false,
+                    folding: false,
+                  }}
+                />
+              </div>
             </div>
 
-            <div className="h-[60px]">
+            <div className="h-[120px]">
               <CodeOutput 
                 output={codeState.output}
                 type={codeState.outputType}
