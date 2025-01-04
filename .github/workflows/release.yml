@@ -67,7 +67,7 @@ jobs:
           mkdir -p ./temp/peak_executor
           mkdir -p ./temp/peak_executor/web
           cp ./{server.lua,README.md,LICENSE,fxmanifest.lua,client.lua} ./temp/peak_executor
-          cp -r ./{modules} ./temp/peak_executor
+          cp -r ./modules ./temp/peak_executor
           cp -r ./web/dist ./temp/peak_executor/web/dist
           cd ./temp && zip -r ../peak_executor.zip ./peak_executor
 
